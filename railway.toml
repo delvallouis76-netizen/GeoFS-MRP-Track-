@@ -1,8 +1,7 @@
-# Railway configuration
 [build]
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "node mrp-command-bot.js"
+startCommand = "node mrp-track-bot.js"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
