@@ -1,4 +1,4 @@
-# MRP COMMAND BOT — Setup Guide
+# MRP TRACK BOT — Setup Guide
 
 ## FILES IN THIS FOLDER
 ```
