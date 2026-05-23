@@ -2,13 +2,13 @@
   "name": "mrp-command-bot",
   "version": "2.0.0",
   "description": "GeoFS MRP COMMAND — Discord ATC/Radar bot",
-  "main": "mrp-command-bot.js",
+  "main": "mrp-track-bot.js",
   "engines": {
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "node mrp-command-bot.js",
-    "dev": "node --watch mrp-command-bot.js"
+    "start": "node mrp-track-bot.js",
+    "dev": "node --watch mrp-track-bot.js"
   },
   "dependencies": {
     "discord.js": "^14.0.0"
