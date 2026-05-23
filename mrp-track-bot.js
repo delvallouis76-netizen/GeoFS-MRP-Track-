@@ -29,6 +29,7 @@ const {
   EmbedBuilder,SlashCommandBuilder,PermissionFlagsBits,
   ButtonBuilder,ButtonStyle,ActionRowBuilder,
 }=require('discord.js');
+const PatrolLog=require('./patrol-log');
 
 // ── ENV ──────────────────────────────────────────────────────────────────────
 const TOKEN      = process.env.BOT_TOKEN   || '';
@@ -791,8 +792,9 @@ let bot=null;
 
 async function registerCmds(){
   const rest=new REST({version:'10'}).setToken(TOKEN);
-  console.log(`[MRP] Registering ${CMDS.length} commands...`);
-  await rest.put(Routes.applicationCommands(APP_ID),{body:CMDS});
+  const allCmds=[...CMDS,...PatrolLog.CMDS];
+  console.log(`[MRP] Registering ${allCmds.length} commands...`);
+  await rest.put(Routes.applicationCommands(APP_ID),{body:allCmds});
   console.log('[MRP] Commands registered.');
 }
 
@@ -808,6 +810,7 @@ async function main(){
     console.log(`[MRP] Online as ${bot.user?.tag}`);
     bot.user?.setPresence({status:'online',activities:[{name:'GeoFS airspace | /radar',type:3}]});
     await registerCmds().catch(e=>console.error('[MRP] Command reg failed:',e.message));
+    PatrolLog.init(bot, DATA_DIR);
     void monitorCycle().catch(e=>console.warn('[MRP] Initial poll:',e.message));
     setInterval(()=>monitorCycle().catch(e=>console.warn('[MRP] Poll:',e.message)),POLL_MS).unref();
   });
@@ -819,6 +822,8 @@ async function main(){
       i.reply({content:'❌ Error processing button.',ephemeral:true}).catch(()=>{});
     });
     if(!i.isChatInputCommand()) return;
+    // patrol log module handles its own commands
+    if(await PatrolLog.handleInteraction(i).catch(()=>false)) return;
     try{
       switch(i.commandName){
         case'territory': return void await handleTerritory(i);
